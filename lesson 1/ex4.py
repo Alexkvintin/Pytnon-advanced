@@ -1,10 +1,11 @@
-def bank(x,y,z):
-    for i in range(0,z):
+def bank(x, y, z):
+    for i in range(0, z):
         f = x*(y/100)
         x = x + f
-    print(x)
+    return x
 
-a = int(input('сумма'))
-b = int(input('количество лет'))
-c = int(input('процент'))
-bank(a,c,b)
+
+money = int(input('сумма'))
+years = int(input('количество лет'))
+percent = int(input('процент'))
+print(bank(money, percent, years))
