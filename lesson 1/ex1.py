@@ -1,4 +1,4 @@
-a = list(range(1, 11, 1))
+a = list(range(0, 11, 1))
 print(a)
 for i in a:
    if i%2==0:
