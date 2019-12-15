@@ -1,6 +1,5 @@
 a = list(range(1, 101, 1))
 for i in a:
-    i+=1
     if i%15==0:
         print('FizzBuzz')
     elif i%5==0:
