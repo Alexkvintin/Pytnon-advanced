@@ -8,16 +8,16 @@ class Car:
 
 class LightCar(Car):
 
-    def __init__(self, num_of_doors, num_of_wheels, brand, model, speed ):
+    def __init__(self, num_of_doors, num_of_wheels, brand, model, speed):
         super().__init__(num_of_doors, num_of_wheels, brand)
         self._speed = speed
         self._model = model
 
     def car_info(self):
         return dict(
-            brand = self._brand,
-            model = self._model,
-            speed = self._speed,
+            brand=self._brand,
+            model=self._model,
+            speed=self._speed,
 
         )
 
@@ -31,9 +31,9 @@ class Truck(Car):
 
     def car_info(self):
         return dict(
-            brand = self._brand,
-            weight = self._weight,
-            model = self._model
+            brand=self._brand,
+            weight=self._weight,
+            model=self._model
         )
 
 
