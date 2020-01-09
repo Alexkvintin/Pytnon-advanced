@@ -1,6 +1,6 @@
 import datetime
 d = [{'login': 'admin', 'password': 'admin'}, ]
-
+g=0
 
 class Reg:
 
@@ -46,7 +46,6 @@ class Autor(Reg):
 
 
 class User(Autor):
-    u = 0
     def search(self):
         u = 0
         for i in d:
@@ -55,9 +54,8 @@ class User(Autor):
                 print('Добро пожаловать', login, '\n', i, '\n', '-' * 35)
                 u += 1
                 break
-            elif u != 1:
+            elif u != 1 and i['login'] != 'admin' and i['password'] == 'admin':
                 print('не верно введенные логин или пароль!')
-        return u
 
     def new_post(x):
         for i in d:
@@ -89,7 +87,7 @@ while True:
                     _time = (datetime.datetime.now().day, datetime.datetime.now().month, datetime.datetime.now().year)
                     data = input('напишите пост')
                     user = User.new_post(data)
-                    y = input('хотите написать еще пост ? (1-да enter-нет)')
+                    y = input('хотите написать еще пост, или выйти ? (1-написать пост enter-выход)')
                     if y == '1':
                         continue
                     else:
@@ -97,7 +95,11 @@ while True:
             else:
                 pass
     elif sing == 0:
-        login = input('input login')
-        password = input('input password')
-        New = Reg(login, password)
-        New._add()
+        login = input('введите логин: ')
+        password = input('введите пароль: ')
+        password_2 = input('повторите пароль: ')
+        if password_2 != password:
+            print('пароли не совпадают ! \n повторите регистрацию !')
+        else:
+            New = Reg(login, password)
+            New._add()
