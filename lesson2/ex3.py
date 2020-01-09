@@ -4,29 +4,33 @@ class T:
         self._y = y
         self._z = z
 
-    def addition(t1, t2):
-        return dict(x = t1['x'] + t2['x'],
-                    y = t1['y'] + t2['y'],
-                    z = t1['z'] + t2['z']
-                    )
+    def __add__(self, other):
+        return dict(
+            x=self._x + other._x,
+            y=self._y + other._y,
+            z=self._z + other._z
+        )
 
-    def subtraction(t1, t2):
-        return dict(x=t1['x'] - t2['x'],
-                    y=t1['y'] - t2['y'],
-                    z=t1['z'] - t2['z']
-                    )
+    def __sub__(self, other):
+        return dict(
+            x=self._x - other._x,
+            y=self._y - other._y,
+            z=self._z - other._z
+        )
 
-    def division(t1, t2):
-        return dict(x=t1['x'] / t2['x'],
-                    y=t1['y'] / t2['y'],
-                    z=t1['z'] / t2['z']
-                    )
+    def __truediv__(self, other):
+        return dict(
+            x=self._x / other._x,
+            y=self._y / other._y,
+            z=self._z / other._z
+        )
 
-    def multiplication(t1, t2):
-        return dict(x=t1['x'] * t2['x'],
-                    y=t1['y'] * t2['y'],
-                    z=t1['z'] * t2['z']
-                    )
+    def __mul__(self, other):
+        return dict(
+            x=self._x * other._x,
+            y=self._y * other._y,
+            z=self._z * other._z
+        )
 
     def info_t(self):
         return dict(
@@ -38,7 +42,7 @@ class T:
 
 t1 = T(3, 4, 5)
 t2 = T(2, 3, 4)
-print(T.addition(t1.info_t(), t2.info_t()))
-print(T.subtraction(t1.info_t(), t2.info_t()))
-print(T.division(t1.info_t(), t2.info_t()))
-print(T.multiplication(t1.info_t(), t2.info_t()))
+print(t1.__add__(t2))
+print(t1.__sub__(t2))
+print(t1.__mul__(t2))
+print(t1.__truediv__(t2))
