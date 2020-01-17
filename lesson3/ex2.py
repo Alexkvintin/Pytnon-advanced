@@ -69,17 +69,8 @@ class Cmplex:
         self.submay = self.y - obj.y
 
 
-
-
-
-
-
-x = float(input())
-y = float(input())
-a = Cmplex(x, y)
-x = float(input())
-y = float(input())
-b = Cmplex(x, y)
+a = Cmplex(x=float(input()), y=float(input()))
+b = Cmplex(x=float(input()), y=float(input()))
 a + b
 a * b
 a - b
