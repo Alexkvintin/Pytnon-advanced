@@ -6,84 +6,86 @@ class Studs(Document):
     fullname = StringField(min_length=4, max_length=60)
     grupe = DecimalField(min_value=101)
     fakult = StringField(min_length=1, max_length=8)
-    mark = ReferenceField('Marks')
-    cure = ReferenceField('Prep')
+    mark = ListField()
+    cure = ReferenceField('Preps')
+
+    def __str__(self):
+        return self.fullname
+
+    def get_stud_core(self):
+        return self.cure
+
+    def _sum(self):
+        return sum(self.mark)
 
 
 class Preps(Document):
     fullname = StringField(min_length=3, max_length=60)
 
-
-class Marks(Document):
-    marks = []
-    mark = DecimalField(min_value=0)
+    def __enter__(self):
+        self._id = self.fullname
 
 
 if __name__ == "__main__":
-    connect('db_exmp')
+    connect('db_exmp1')
     "1"
+    Preps.objects.delete()
+    Studs.objects.delete()
     prep1 = Preps(
         fullname='Charles'
-    )
+    ).save()
     prep2 = Preps(
         fullname='Sarah Connor'
-    )
-    "2"
-    marks = Marks
-    for i in range(5) :
-        marks.marks.append(random.randint(60, 100))
-    marks.mark = 0
-    for i in marks.marks :
-        marks.mark += i
-    marks.mark = marks.mark / 5
+    ).save()
     stud = Studs(
         fullname='Alicia',
         grupe=112,
         fakult='FA',
-        mark=marks.mark,
+        mark=[60, 60, 70, 60],
         cure=prep1
-    )
-    marks1 = Marks
-    for i in range(5) :
-        marks1.marks.append(random.randint(60, 100))
-    marks1.mark = 0
-    for i in marks1.marks :
-        marks1.mark += i
-    marks1.mark = marks.mark / 5
+    ).save()
     stud1 = Studs(
         fullname='Mateo',
         grupe=112,
         fakult='FA',
-        mark=marks1.mark,
+        mark=[60, 85, 76, 80],
         cure=prep1
-    )
-    marks2 = Marks
-    for i in range(5) :
-        marks2.marks.append(random.randint(60, 100))
-    marks2.mark = 0
-    for i in marks2.marks :
-        marks2.mark += i
-    marks2.mark = marks.mark / 5
+    ).save()
     stud2 = Studs(
         fullname='Grace',
         grupe=231,
         fakult='FRA',
-        mark=marks2.mark,
-        cure=prep1
-    )
-    marks3 = Marks
-    for i in range(5) :
-        marks3.marks.append(random.randint(60, 100))
-    marks3.mark = 0
-    for i in marks3.marks :
-        marks3.mark += i
-    marks3.mark = marks.mark / 5
+        mark=[60, 65, 67, 65],
+        cure=prep2
+    ).save()
     stud3 = Studs(
         fullname='Dani Ramos',
         grupe=231,
         fakult='FRA',
-        mark=marks3.mark,
-        cure=prep1
-    )
+        mark=[80, 90, 75, 80],
+        cure=prep2
+    ).save()
+    super = Studs.objects.filter(fakult='FRA', mark__gte=70)
+    print(super)
+    cure = Studs.objects.filter(cure=prep1)
+    print(cure)
+    "update"
+    Studs.objects(fullname='Dani Ramos').update(mark=100)
+    print(Studs.objects(fullname='Dani Ramos').to_json())
+    "read"
+    a = input('stud fullname')
+    print(Studs.objects(fullname=a).to_json())
+    "delete"
+    Studs.objects(fullname='Dani Ramos').delete()
+    print(Studs.objects.to_json())
+    "create"
+    azb = []
+    Studs.objects.create(
+        fullname='Dani Ramos',
+        grupe=231,
+        fakult='FRA',
+        mark=[80, 90, 75, 80],
+        cure=prep2
 
-    print(stud1.mark)
+    )
+    print(Studs.objects.to_json())
