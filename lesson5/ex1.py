@@ -1,21 +1,21 @@
 import threading
 
 
-def decor(isdeamon, name) :
-    def wrapper(func, ) :
-        tr = threading.Thread(target=func, args=(name,))
-        tr.daemon = isdeamon
-        tr.setName(name)
-        tr.start()
-        tr.join()
-        return
+def decor(isdaemon, name):
+    def take_func(func):
+        def wrapper():
+            tr = threading.Thread(target=func, name=name, daemon=isdaemon, args=(name,))
+            tr.start()
 
-    return wrapper
+        return wrapper
 
-
-@decor(True, 'rtx')
-def now_ran(nametr) :
-    print(f"Thread {nametr}: starting")
-    print(f"Thread {nametr}: finishing")
+    return take_func
 
 
+@decor(True, 'name')
+def now_ran(name):
+    print(f"Thread {name}: starting")
+    print(f"Thread {name}: finishing")
+
+
+now_ran()
