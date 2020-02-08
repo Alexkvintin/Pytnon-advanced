@@ -1,6 +1,5 @@
 import threading
 import wget
-import os
 
 urls = ('https://icons.iconarchive.com/icons/goodstuff-no-nonsense/free-space/1024/rick-icon.png',
         'https://icons.iconarchive.com/icons/goodstuff-no-nonsense/free-space/1024/rick-icon.png',
@@ -18,23 +17,29 @@ urls = ('https://icons.iconarchive.com/icons/goodstuff-no-nonsense/free-space/10
 def decorator(isdaemon, name):
     def take_func(func):
         def wrapper():
-            for i, url in enumerate(urls, start=1):
-                tr = threading.Thread(target=func, name=name, daemon=isdaemon, args=(name, i, url))
+            for url in urls:
+                tr = threading.Thread(target=func, name=name, daemon=isdaemon, args=(name, url))
                 threads.append(tr)
                 tr.start()
-            for i in threads:
-                i.join()
+            for thread in threads:
+                thread.join()
 
         return wrapper
 
     return take_func
 
 
+k = []
+for i in range(1, 11):
+    k.append(i)
+
+
 @decorator(True, 'name')
-def new_run(name, i, url):
-    print(f'Thread {name} {i}: Начал загрузку !')
-    wget.download(url, f'Картинка {i}.png')
-    print(f'Thread {name} {i}: Завершил загрузку !')
+def new_run(name, url):
+    number = k.pop(0)
+    print(f'Thread {name} {number}: Начал загрузку !')
+    wget.download(url, f'Картинка {number}.png')
+    print(f'Thread {name} {number}: Завершил загрузку !')
 
 
 threads = []
