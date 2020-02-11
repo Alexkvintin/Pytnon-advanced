@@ -22,7 +22,7 @@ else:
         days = weather[0 + i:i + 7]
         new_day_dict[days[1]] = ' '.join(days)
         num_of_days.append(days[1])
-    # print(*city)
+    print(*city)
     while True:
         day_num = input(f'Выберите дату с {num_of_days[0]} по {num_of_days[-1]}: ')
         try:
