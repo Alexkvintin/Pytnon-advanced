@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+
 print('=' * 60)
 city_def = 'киев'
 city = input('Город: ')
@@ -12,22 +13,23 @@ info = BeautifulSoup(resp.text, 'lxml')
 if info.find("body", class_="ua p404"):
     print('Ошибка...\nНет искомой информации.')
 else:
-    date1 = []
-    date2 = {}
+    num_of_days = []
+    new_day_dict = {}
     weather = (info.find("div", class_="tabs").text).split()
     city = (info.find("div", class_="cityName cityNameShort").text).split()
     # print(weather)
     for i in range(0, len(weather), 7):
-        days = weather[0 + i:7 + i]
-        # print(days)
-        date2[days[1].lstrip('0')] = ' '.join(days)
-        date1.append(days[1].lstrip('0'))
-    print(*city)
+        days = weather[0 + i:i + 7]
+        new_day_dict[days[1]] = ' '.join(days)
+        num_of_days.append(days[1])
+    # print(*city)
     while True:
-        input_date = input(f'Выберите дату с {date1[0]} по {date1[len(date1) - 1]}: ')
+        day_num = input(f'Выберите дату с {num_of_days[0]} по {num_of_days[-1]}: ')
         try:
-            print(date2[input_date])
+            print(new_day_dict[day_num])
         except KeyError:
             print('Некоректная дата!')
-            if input('Другая дата (1-yes/enter-exit)') != '1':
-                break
+        switch = input('Другая дата (1-yes/enter-exit)')
+        if switch != '1':
+            break
+print('='*60)
