@@ -1,7 +1,10 @@
 class List:
     def __init__(self, *args):
         self._list = [*args]
-
+        
+    def __str__(self):
+        return str(self._list)
+    
     def append(self, item):
         self._list.append(item)
         return f'Был добавлен елемент {self._list[-1]}'
@@ -20,9 +23,6 @@ class List:
     def insert(self, number, item):
         self._list.insert(number, item)
         return f'Был добавлен елемент {item}, по адрессу {number} '
-
-    def __str__(self):
-        return str(self._list)
 
     def __add__(self, other):
         for values in other:
