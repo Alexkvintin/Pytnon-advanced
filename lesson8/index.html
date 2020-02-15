@@ -12,12 +12,12 @@
         </div>
       </nav>
 
-    <div align="center" style="margin: 50px;">
+    <div align="center">
           <h3>Welcome to our market !</h3>
           <h3>Select a category </h3>
-            <div style="margin: 30px;">
+            <div>
               {% for category_name, category_id in categories_dict.items() %}
-                  <a class="btn btn-primary custom" style=" width: 400px;" href="{{ url_for('products_by_id', id=category_id, category=category_name ) }}">{{ category_name }}</a>
+                  <a class="btn btn-primary custom" href="{{ url_for('products_by_id', id=category_id, category=category_name ) }}">{{ category_name }}</a>
                   </br></br>
               {% endfor %}
             </div>
