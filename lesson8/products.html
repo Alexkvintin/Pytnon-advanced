@@ -13,11 +13,11 @@
     </div>
   </nav>
 
-    <div align="center" style="margin: 50px;">
+    <div align="center">
           <h3>{{ category }}</h3>
             <div>
               {% for item_name, item_id in products.items() %}
-                  <a class="btn btn-primary custom" style="width: 400px;" href="{{ url_for('item_detail', id=item_id) }}">{{ item_name }}</a>
+                  <a class="btn btn-primary custom" href="{{ url_for('item_detail', id=item_id) }}">{{ item_name }}</a>
                   </br></br>
               {% endfor %}
                <a class="btn btn-default" href="{{ url_for('home') }}">Main menu</a>
