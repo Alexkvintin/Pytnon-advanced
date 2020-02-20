@@ -11,7 +11,7 @@ bot = TeleBot(TOKEN)
 @bot.message_handler(commands=['start'])
 def start(message):
     greeting_str = models.Texts.objects(title='Greetings').get().body
-    keyboard = ReplyKeyboardMarkup()
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*kb.values())
     bot.send_message(message.chat.id, greeting_str, reply_markup=keyboard)
 
