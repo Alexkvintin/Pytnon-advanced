@@ -12,7 +12,7 @@ bot = TeleBot(TOKEN)
 def start(message):
     greeting_str = models.Texts.objects(title='Greetings').get().body
     keyboard = ReplyKeyboardMarkup()
-    keyboard.add(*beginning_kb.values())
+    keyboard.add(*kb.values())
     bot.send_message(message.chat.id, greeting_str, reply_markup=keyboard)
 
 
@@ -38,8 +38,7 @@ def main_text_handler(message):
         for i in product:
             photo = i.photo.read()
             keyboard = InlineKeyboardMarkup()
-            button = InlineKeyboardButton(text='Добавить в корзину', callback_data='add-to-cart_' + str(i.id))
-            keyboard.add(button)
+            keyboard.add(InlineKeyboardButton(text='Добавить в корзину', callback_data='add-to-cart_' + str(i.id)))
             bot.send_photo(message.chat.id, photo, parse_mode='HTML', caption=f"<b>{i.title}</b>\nСтарая цена: " + str(i.price) + 'грн.' + "\n<b>Новая цена:" + str(i.new_price) + 'грн.' + "</b>" + f"\n{i.description}", reply_markup=keyboard)
 
     elif message.text.lower() == 'корзина':
@@ -56,11 +55,11 @@ def main_text_handler(message):
                 cart_sum_now += i.product.get_price
             cart_sum = models.Cart().get_cart_sum(user)
             cart_text = "Сума товаров в корзине: " + str(cart_sum_now) + " грн." + "\n" + cart_text + "Общая сумма покупок: " + str(cart_sum) + " грн."
-            markup = InlineKeyboardMarkup()
-            buy = InlineKeyboardButton(text='Купить', callback_data='by-cart_' + str(i.user.id))
-            clear = InlineKeyboardButton(text='Очистить корзину', callback_data='clear-cart_' + str(i.user.id))
-            markup.add(buy, clear)
-            bot.send_message(message.chat.id, cart_text, reply_markup=markup)
+            keyboard = InlineKeyboardMarkup()
+            keyboard.add(*[
+                InlineKeyboardButton(text='Купить', callback_data='by-cart_' + str(i.user.id)),
+                InlineKeyboardButton(text='Очистить корзину', callback_data='clear-cart_' + str(i.user.id))])
+            bot.send_message(message.chat.id, cart_text, reply_markup=keyboard)
     else:
         pass
 
@@ -72,8 +71,8 @@ def show_products_or_subcategory(call):
     if category.is_parent:
         print(category.subcategory)
         keyboard = InlineKeyboardMarkup(row_width=2)
-        keyboard.add(*[InlineKeyboardButton(i.title, callback_data='category_' + str(i.id)) for i in category.subcategory])
-        keyboard.add(InlineKeyboardButton(text="<<", callback_data=f'back_{category.id}'))
+        keyboard.add(*[InlineKeyboardButton(i.title, callback_data='category_' + str(i.id)) for i in category.subcategory],
+                     InlineKeyboardButton(text="<<", callback_data=f'back_{category.id}'))
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Что будем брать ?", reply_markup=keyboard)
     else:
         product = category.get_products()
