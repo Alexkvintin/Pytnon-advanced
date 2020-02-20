@@ -9,13 +9,8 @@ class Texts(Document):
     body = StringField(max_length=4096)
 
 
-class Properties(DynamicEmbeddedDocument):
-    weight = FloatField(min_value=0)
-
-
 class Category(Document):
     title = StringField(max_length=255, required=True)
-    description = StringField(max_length=512)
     subcategory = ListField(ReferenceField('self'))
     parent = ReferenceField('self')
 
@@ -55,7 +50,6 @@ class Product(Document):
     price = IntField(min_value=0)
     new_price = IntField(min_value=0)
     is_discount = BooleanField(default=False)
-    properties = EmbeddedDocumentField(Properties)
     category = ReferenceField(Category)
     photo = FileField()
 
@@ -75,9 +69,9 @@ class Cart(Document):
     product = ReferenceField(Product)
     active = BooleanField(default=True)
 
-    def get_cart_sum(self, user_obj):
+    def get_cart_sum(self, user):
         total_sum = 0
-        products_of_user = Cart.objects(user=user_obj)
+        products_of_user = Cart.objects(user=user)
         for i in products_of_user:
             total_sum = total_sum + i.product.get_price
         return total_sum
