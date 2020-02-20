@@ -69,7 +69,6 @@ def show_products_or_subcategory(call):
     _id = call.data.split("_")[1]
     category = models.Category.objects(id=_id).get()
     if category.is_parent:
-        print(category.subcategory)
         keyboard = InlineKeyboardMarkup(row_width=2)
         keyboard.add(*[InlineKeyboardButton(i.title, callback_data='category_' + str(i.id)) for i in category.subcategory],
                      InlineKeyboardButton(text="<<", callback_data=f'back_{category.id}'))
