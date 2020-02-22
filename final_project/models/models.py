@@ -6,7 +6,7 @@ connect("shop_bot")
 
 class Texts(Document):
     title = StringField(unique=True)
-    body = StringField(max_length=4096)
+    info = StringField(max_length=4096)
 
 
 class Category(Document):
