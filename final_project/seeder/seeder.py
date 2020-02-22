@@ -3,9 +3,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from models.models import *
 from app import STORE_NAME
 
-Texts(**{"title": "Greetings", "body": f"Вас приветствует магазин {STORE_NAME}"}).save()
-Texts(**{"title": "About", "body": f"Вас приветствует телеграм магазин {STORE_NAME}.\nТут вы сможете дешево купить комплектующие для вашего ПК"}).save()
-Texts(**{"title": "Last news", "body": f"В нашем магазине акция ! купите любой AMD процессор и получите игру в подарок !"}).save()
+Texts(**{"title": "Greetings", "info": f"Вас приветствует магазин {STORE_NAME}"}).save()
+Texts(**{"title": "About", "info": f"Вас приветствует телеграм магазин {STORE_NAME}.\nТут вы сможете дешево купить комплектующие для вашего ПК"}).save()
+Texts(**{"title": "Last news", "info": f"В нашем магазине акция ! купите любой AMD процессор и получите игру в подарок !"}).save()
 
 nvidia_video = Category(**{"title": "RTX"}).save()
 amd_video = Category(**{"title": "RX"}).save()
