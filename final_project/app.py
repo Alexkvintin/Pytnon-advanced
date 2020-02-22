@@ -10,10 +10,8 @@ bot = TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    print(message)
     # получаем параметр "info" элемента БД по заданому параметру "title"
     greeting = models.Texts.objects(title='Greetings').get().info
-    print(greeting)
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*kb.values())
     bot.send_message(message.chat.id, greeting, reply_markup=keyboard)
