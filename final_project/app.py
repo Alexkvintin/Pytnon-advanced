@@ -10,30 +10,37 @@ bot = TeleBot(TOKEN)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    greeting_str = models.Texts.objects(title='Greetings').get().body
+    print(message)
+    # получаем параметр "info" элемента БД по заданому параметру "title"
+    greeting = models.Texts.objects(title='Greetings').get().info
+    print(greeting)
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add(*kb.values())
-    bot.send_message(message.chat.id, greeting_str, reply_markup=keyboard)
+    bot.send_message(message.chat.id, greeting, reply_markup=keyboard)
 
 
 @bot.message_handler(content_types=['text'])
 def main_text_handler(message):
     if message.text.lower() == 'информация о магазине':
-        about_str = models.Texts.objects(title='About').get().body
-        bot.send_message(message.chat.id, about_str)
+        # Так же как и в "start"
+        about = models.Texts.objects(title='About').get().info
+        bot.send_message(message.chat.id, about)
         return
 
     elif message.text.lower() == 'последние новости':
-        about_str = models.Texts.objects(title='Last news').get().body
-        bot.send_message(message.chat.id, about_str)
+        # Так же как и в "start"
+        news = models.Texts.objects(title='Last news').get().info
+        bot.send_message(message.chat.id, news)
         return
 
     elif message.text.lower() == 'продукты':
         keyboard = InlineKeyboardMarkup(row_width=1)
+        # Получаем объекты класса "Category" с БД, записываем их "title" в кнопки
         keyboard.add(*[InlineKeyboardButton(i.title, callback_data='category_' + str(i.id)) for i in models.Category.get_root_categories()])
         bot.send_message(message.chat.id, "Выберите категорию", reply_markup=keyboard)
 
     elif message.text.lower() == 'продукты со скидкой':
+        # Получаем объекты класса "Product" с установленным параметром "is_discount" в "True"
         product = models.Product.objects(is_discount=True)
         for i in product:
             photo = i.photo.read()
@@ -42,8 +49,11 @@ def main_text_handler(message):
             bot.send_photo(message.chat.id, photo, parse_mode='HTML', caption=f"<b>{i.title}</b>\nСтарая цена: " + str(i.price) + 'грн.' + "\n<b>Новая цена:" + str(i.new_price) + 'грн.' + "</b>" + f"\n{i.description}", reply_markup=keyboard)
 
     elif message.text.lower() == 'корзина':
+        # Проверяем на соответствие "user_id" с id чата
         if message.chat.id in models.User.objects.distinct("user_id"):
+            # Получаем объект класса "User" с БД, по id в телеграме
             user = models.User.objects.get(user_id=message.from_user.id)
+            # Получаем объект класса "Cart" с БД, по заданым параметрам
             user_cart = models.Cart.objects(user=user, active=True)
             if not user_cart:
                 bot.send_message(message.chat.id, "Корзина пуста")
@@ -60,6 +70,8 @@ def main_text_handler(message):
                 InlineKeyboardButton(text='Купить', callback_data='by-cart_' + str(i.user.id)),
                 InlineKeyboardButton(text='Очистить корзину', callback_data='clear-cart_' + str(i.user.id))])
             bot.send_message(message.chat.id, cart_text, reply_markup=keyboard)
+        else:
+            bot.send_message(message.chat.id, 'Корзина пуста')
     else:
         pass
 
@@ -67,13 +79,16 @@ def main_text_handler(message):
 @bot.callback_query_handler(func=lambda call: call.data.split('_')[0] == 'category')
 def show_products_or_subcategory(call):
     _id = call.data.split("_")[1]
+    # Получаем объект класса "Category" с БД, по заданому id
     category = models.Category.objects(id=_id).get()
     if category.is_parent:
         keyboard = InlineKeyboardMarkup(row_width=2)
+        # Получаем все "subcategory" объекта, записываем их "title" в кнопки
         keyboard.add(*[InlineKeyboardButton(i.title, callback_data='category_' + str(i.id)) for i in category.subcategory],
                      InlineKeyboardButton(text="<<", callback_data=f'back_{category.id}'))
         bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text="Что будем брать ?", reply_markup=keyboard)
     else:
+        # Если проверка на родительскую категорию не была прйдена, возвращаем объекты класса "Product", что принадлежат текущей категории
         product = category.get_products()
         for i in product:
             photo = i.photo.read()
